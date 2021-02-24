@@ -49,6 +49,14 @@ public class XinHeYun {
         String name;
         List<Path> nextPath;
         List<Path> lastPath;
+        /**
+         * 到达TAIL的最短路径中的第一条
+         */
+        Path quickestPath;
+        /**
+         * 到达TAIL的最短路径的总长度
+         */
+        double quickestPathUnit;
 
         public Node(String name) {
             this.name = name;
@@ -68,10 +76,14 @@ public class XinHeYun {
             lastPath.add(path);
         }
 
+        public void setQuickestNextNode(Path path) {
+            this.quickestPath = path;
+            this.quickestPathUnit = path.unit + path.next.quickestPathUnit;
+        }
+
         @Override
         public String toString() {
-            return "name = " + name +
-                    ", pathSize = " + (nextPath == null ? 0 : nextPath.size());
+            return "name = " + name;
         }
     }
 
@@ -79,13 +91,11 @@ public class XinHeYun {
         Node pre;
         Node next;
         double unit;
-        double totalUnit; // 用于计算路径时保存链路的总unit
 
         public Path(Node pre, Node next, String unit, String totalUnit) {
             this.pre = pre;
             this.next = next;
             this.unit = new Double(unit);
-            this.totalUnit = new Double(totalUnit);
         }
 
         @Override
@@ -104,47 +114,47 @@ public class XinHeYun {
             initData(HEAD, TAIL);
             // 默认是无环图
             // 深度优先遍历
-            Path path = deepSearch(HEAD);
+            Node path = traverseQuickestNextNode(HEAD);
 
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(path).append("\t");
 
-            Path clonePath = path;
-            while (true) {
-                stringBuilder.append(clonePath.next);
-                if (path.next == null || path.next.nextPath == null) {
-                    break;
-                }
-
-                clonePath = clonePath.next.nextPath.get(0);
+            Node node = HEAD;
+            while (node.quickestPath != null && (node = node.quickestPath.next) != null) {
+                stringBuilder.append(node.name).append(" -> ");
             }
 
             System.out.println(stringBuilder.toString());
         }
 
-        public static Path deepSearch(Node node) {
+        public static Node traverseQuickestNextNode(Node node) {
             System.out.println("traverse " + node.name);
-            if (node.nextPath == null) {
-                return new Path(null, null, "0", String.valueOf(Integer.MAX_VALUE));
+            if (node.quickestPath != null) {
+                return node.quickestPath.next;
             }
+            List<Path> nextPath = node.nextPath;
 
-            Path minUnitPath = deepSearch(node.nextPath.get(0).next);
-            Path currentPath = null;
-            for (int i = 1; i < node.nextPath.size(); i++) {
-                Path path = node.nextPath.get(i);
+            Path shortestCandidate = nextPath.get(0);
+
+            Path path = null;
+            // 这里用0是为了让里面的逻辑走一遍
+            for (int i = 0; i < nextPath.size(); i++) {
+                path = nextPath.get(i);
                 if (path.next == TAIL) {
-                    Path tailPath = new Path(null, null, "0", "0");
-                    tailPath.totalUnit = new Double("0");
-                    return tailPath;
+                    shortestCandidate = path;
+                    break;
+                }
+                if (path.next.nextPath == null) {
+                    // 如果出现无法到达TAIL的节点， 预留处理
                 }
 
-                currentPath = deepSearch(path.next);
-                if (currentPath.totalUnit < minUnitPath.totalUnit) {
-                    minUnitPath = currentPath;
+                if (path.unit + traverseQuickestNextNode(path.next).quickestPathUnit < shortestCandidate.unit + traverseQuickestNextNode(shortestCandidate.next).quickestPathUnit) {
+                    shortestCandidate = path;
                 }
             }
 
-            return minUnitPath;
+            node.setQuickestNextNode(shortestCandidate);
+            return shortestCandidate.next;
         }
     }
 }
