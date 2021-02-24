@@ -116,7 +116,7 @@ public class XinHeYun {
         /**
          * 到达TAIL的最短路径的总长度
          */
-        double quickestPathUnit;
+        Double quickestPathUnit;
 
         public Node(String name) {
             this.name = name;
@@ -143,7 +143,7 @@ public class XinHeYun {
     static class Path {
         Node pre;
         Node next;
-        double unit;
+        Double unit;
 
         public Path(Node pre, Node next, String unit) {
             this.pre = pre;
