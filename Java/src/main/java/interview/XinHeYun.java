@@ -20,6 +20,7 @@ public class XinHeYun {
         Node I = new Node("I");
         Node J = new Node("J");
 
+
         addPath(HEAD, A, "0.5");
         addPath(A, B, "0.5");
         addPath(B, C, "0.5");
@@ -35,6 +36,11 @@ public class XinHeYun {
         addPath(H, I, "1");
         addPath(I, J, "2");
         addPath(J, E, "1");
+
+
+        // K节点不可达TAIL
+        Node K = new Node("K");
+        addPath(HEAD, K, "0.01");
 
         return HEAD;
     }
@@ -84,7 +90,8 @@ public class XinHeYun {
                     break;
                 }
                 if (path.next.nextPath == null) {
-                    // 如果出现无法到达TAIL的节点， 预留处理
+                    // 如果出现无法到达TAIL的节点
+                    path.next.setQuickestNextNode(new Path(path.next, TAIL, String.valueOf(Integer.MAX_VALUE)));
                 }
 
                 // 当前path长度 + （path终点节点到TAIL的最短路径），即是节点node到TAIL的最短路径
