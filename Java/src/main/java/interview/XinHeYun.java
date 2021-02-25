@@ -54,10 +54,13 @@ public class XinHeYun {
 
         static Node HEAD = new Node("HEAD");
         static Node TAIL = new Node("TAIL");
+        static Node NOT_TAIL = new Node("NOT_TAIL");
 
         public static void main(String[] args) {
 
             initData(HEAD, TAIL);
+            // 设置一个非TAIL节点, 如果有节点是中断的, 使其通过这条路径到达TAIL
+            NOT_TAIL.setQuickestNextNode(new Path(NOT_TAIL, TAIL, String.valueOf(Integer.MAX_VALUE)));
             // 默认是无环图, 深度优先遍历
             traverseQuickestNextNode(HEAD);
 
@@ -91,11 +94,13 @@ public class XinHeYun {
                 }
                 if (path.next.nextPath == null) {
                     // 如果出现无法到达TAIL的节点
-                    path.next.setQuickestNextNode(new Path(path.next, TAIL, String.valueOf(Integer.MAX_VALUE)));
+                    path.next.setQuickestNextNode(new Path(path.next, NOT_TAIL, String.valueOf(Integer.MAX_VALUE)));
                 }
 
                 // 当前path长度 + （path终点节点到TAIL的最短路径），即是节点node到TAIL的最短路径
-                if (path.unit + traverseQuickestNextNode(path.next).quickestPathUnit < shortestCandidate.unit + traverseQuickestNextNode(shortestCandidate.next).quickestPathUnit) {
+                double current = path.unit + traverseQuickestNextNode(path.next).quickestPathUnit;
+                double candidate = shortestCandidate.unit + traverseQuickestNextNode(shortestCandidate.next).quickestPathUnit;
+                if (current < candidate) {
                     shortestCandidate = path;
                 }
             }
@@ -116,7 +121,7 @@ public class XinHeYun {
         /**
          * 到达TAIL的最短路径的总长度
          */
-        Double quickestPathUnit;
+        double quickestPathUnit;
 
         public Node(String name) {
             this.name = name;
@@ -143,7 +148,7 @@ public class XinHeYun {
     static class Path {
         Node pre;
         Node next;
-        Double unit;
+        double unit;
 
         public Path(Node pre, Node next, String unit) {
             this.pre = pre;
