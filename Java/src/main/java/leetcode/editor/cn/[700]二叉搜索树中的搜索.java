@@ -47,23 +47,10 @@ package leetcode.editor.cn;
  */
 class Solution {
     public TreeNode searchBST(TreeNode root, int val) {
-        return search(root, val);
+        if (root == null || val == root.val) return root;
+        return val < root.val ? searchBST(root.left, val) : searchBST(root.right, val);
     }
 
-    public TreeNode search(TreeNode node, int val) {
-        if (node == null) {
-            return null;
-        }
-        if (node.val == val) {
-            return node;
-        }
-
-        if (val > node.val) {
-            return search(node.right, val);
-        } else {
-            return search(node.left, val);
-        }
-    }
 }
 //leetcode submit region end(Prohibit modification and deletion)
 
