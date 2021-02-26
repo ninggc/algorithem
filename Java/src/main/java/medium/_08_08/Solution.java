@@ -1,6 +1,7 @@
 package medium._08_08;
 
-import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * https://leetcode-cn.com/problems/permutation-ii-lcci/
@@ -12,9 +13,6 @@ import java.util.Arrays;
  * 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
  */
 class Solution {
-    String[] result = null;
-    int resultIndex = 0;
-
     /**
      * 1. 使用uniqueChar这个数组来保存字符集，偶数位是字符，奇数位是数量
      * 深度优先遍历，每一层使用的字符数量减一，最内一层将结果保存
@@ -25,16 +23,14 @@ class Solution {
      * @return
      */
     public String[] permutation(String S) {
-        Character[] uniqueChar = new Character[S.length() * 2];
+        char[] uniqueChar = new char[S.length() * 2];
 
         // 对S去重
-        int uniqueLength = 0;
         for (char c : S.toCharArray()) {
             for (int i = 0; i < uniqueChar.length; ) {
-                if (uniqueChar[i] == null) {
+                if (uniqueChar[i] == '\000') {
                     uniqueChar[i] = c;
                     uniqueChar[i + 1] = '1';
-                    ++uniqueLength;
                     break;
                 } else if (uniqueChar[i] == c) {
                     uniqueChar[i + 1]++;
@@ -45,30 +41,22 @@ class Solution {
         }
 
 
-        int maxCount = 1;
-        for (int i = 0; i < S.length(); i++) {
-            maxCount *= uniqueLength;
-        }
-        result = new String[maxCount];
+        List<String> result = new LinkedList<>();
         calculateRemanent(uniqueChar, result, new char[S.length()], 0);
-        String[] trimResult = new String[resultIndex];
-        for (int i = 0; i < trimResult.length; i++) {
-            trimResult[i] = result[i];
-        }
 
-        return trimResult;
+        return result.toArray(new String[]{});
     }
 
-    private void calculateRemanent(Character[] uniqueChar, String[] result, char[] partResult, int index) {
+    private void calculateRemanent(char[] uniqueChar, List<String> result, char[] partResult, int index) {
         for (int i = 0; i < uniqueChar.length; i += 2) {
-            if (uniqueChar[i +1] == null || uniqueChar[i + 1] == '0') {
+            if (uniqueChar[i +1] == '\000' || uniqueChar[i + 1] == '0') {
                 continue;
             }
 
             --uniqueChar[i + 1];
             partResult[index] = uniqueChar[i];
             if (index + 1 == partResult.length) {
-                result[resultIndex++] = new String(partResult);
+                result.add(new String(partResult));
             } else {
                 calculateRemanent(uniqueChar, result, partResult, index + 1);
             }
@@ -77,6 +65,6 @@ class Solution {
     }
 
     public static void main(String[] args) {
-        new Solution().permutation("LDirNn");
+        // new Solution().permutation("LDirNn");
     }
 }
