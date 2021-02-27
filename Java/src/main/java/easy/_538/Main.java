@@ -10,39 +10,17 @@ package easy._538;
  * }
  */
 class Solution {
+    int sum = 0;
     public TreeNode convertBST(TreeNode root) {
-        if (root == null) {
-            return root;
-        }
-        if (root.right != null) {
-            root.val = root.val + deepFind(root.right);
-        }
-
-        TreeNode leftMaxNode = root.left;
-        if (leftMaxNode != null) {
-            while (leftMaxNode.right != null) {
-                leftMaxNode = leftMaxNode.right;
-            }
-            leftMaxNode.val = leftMaxNode.val + root.val;
+        if (root != null) {
+            convertBST(root.right);
+            root.val = (sum += root.val);
+            convertBST(root.left);
         }
 
-
-        if (root.left != null) {
-            deepFind(root.left);
-        }
         return root;
     }
 
-    private int deepFind(TreeNode root) {
-        if (root.right != null) {
-            root.val = root.val + deepFind(root.right);
-        }
-        if (root.left != null) {
-            root.left.val = deepFind(root.left) + root.val;
-            return root.left.val;
-        }
-        return root.val;
-    }
 
     static TreeNode superRoot = new TreeNode(2);
 
