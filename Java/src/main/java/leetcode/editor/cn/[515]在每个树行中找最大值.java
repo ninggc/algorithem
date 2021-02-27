@@ -21,9 +21,7 @@ package leetcode.editor.cn;
 
 import leetcode.editor.cn.common.TreeNode;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 //leetcode submit region begin(Prohibit modification and deletion)
 
@@ -44,52 +42,33 @@ import java.util.List;
  */
 class Solution {
     public List<Integer> largestValues(TreeNode root) {
-        if (root == null) {
-            return Collections.emptyList();
+        Queue<TreeNode> nodes = new LinkedList<>();
+        if (root != null) {
+            nodes.add(root);
         }
-        List<Integer> result = new ArrayList<>();
 
-        // 需要处理的行的节点
-        List<TreeNode> currentNodes = new ArrayList<>();
-        currentNodes.add(root);
-        result.add(root.val);
-
-        search(result, currentNodes);
-        return result;
+        return search(nodes);
     }
 
-    private void search(List<Integer> result, List<TreeNode> currentNodes) {
-        List<TreeNode> childNodes = new ArrayList<>();
+    private List<Integer> search(Queue<TreeNode> nodes) {
+        List<Integer> result = new LinkedList<>();
 
-        TreeNode childNode = null;
-        while (!currentNodes.isEmpty()) {
-            Integer max = null;
-            for (TreeNode node : currentNodes) {
-                childNode = node.left;
-                if (childNode != null) {
-                    if (max == null || childNode.val > max) {
-                        max = childNode.val;
-                    }
-                    childNodes.add(childNode);
+        while (!nodes.isEmpty()) {
+            int max = Integer.MIN_VALUE;
+            int size = nodes.size();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = nodes.poll();
+                max = Math.max(max, node.val);
+                if (node.left != null) {
+                    nodes.add(node.left);
                 }
-                childNode = node.right;
-                if (childNode != null) {
-                    if (max == null || childNode.val > max) {
-                        max = childNode.val;
-                    }
-                    childNodes.add(childNode);
+                if (node.right != null) {
+                    nodes.add(node.right);
                 }
             }
-            if (max != null) {
-                result.add(max);
-            }
-
-            List<TreeNode> tmp = currentNodes;
-            currentNodes = childNodes;
-            childNodes = tmp;
-            childNodes.clear();
+            result.add(max);
         }
-
+        return result;
     }
 
 }
