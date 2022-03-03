@@ -53,7 +53,7 @@
 // Related Topics 字符串 👍 1562 👎 0
 
 
-package leetcode.editor.cn;
+package leetcode.editor.cn._6;
 
 import java.util.ArrayList;
 import java.util.List;
