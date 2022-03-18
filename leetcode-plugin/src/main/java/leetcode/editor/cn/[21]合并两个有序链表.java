@@ -52,20 +52,12 @@ package leetcode.editor.cn;
 class Solution {
 
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        ListNode result = null;
         if (list1 == null) {
             return list2;
         } else if (list2 == null) {
             return list1;
         }
-
-        if (list1.val < list2.val) {
-            result = list1;
-            list1 = list1.next;
-        } else {
-            result = list2;
-            list2 = list2.next;
-        }
+        ListNode result = new ListNode(0);
 
         ListNode handle = result;
         while (list1 != null && list2 != null) {
@@ -87,7 +79,7 @@ class Solution {
             list2 = list2.next;
         }
 
-        return result;
+        return result.next;
     }
 
 //    public class ListNode {
