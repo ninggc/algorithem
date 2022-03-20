@@ -51,7 +51,7 @@
 // Related Topics 数组 字符串 二分查找 前缀和 👍 104 👎 0
 
 
-package leetcode.editor.cn;
+package leetcode.editor.cn._2055;
 
 //leetcode submit region begin(Prohibit modification and deletion)
 class Solution {

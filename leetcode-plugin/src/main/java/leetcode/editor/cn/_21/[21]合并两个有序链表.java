@@ -35,7 +35,7 @@
 // Related Topics 递归 链表 👍 2282 👎 0
 
 
-package leetcode.editor.cn;
+package leetcode.editor.cn._21;
 
 //leetcode submit region begin(Prohibit modification and deletion)
 
